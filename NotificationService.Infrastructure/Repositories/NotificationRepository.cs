@@ -27,7 +27,7 @@ public class NotificationRepository : INotificationRepository
             .ToListAsync();
     }
 
-    public async Task MarkAsReadAsync(string notificationId)
+    public async Task MarkAsReadAsync(Guid notificationId)
     {
         var notification = await _context.Notifications.FindAsync(notificationId);
         if (notification != null)
