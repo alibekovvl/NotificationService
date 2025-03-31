@@ -21,6 +21,17 @@ public class NotificationController : ControllerBase
         var notifications = await _notificationService.GetNotificationsAsync(filter,param);
         return Ok(notifications);
     }
+
+    [HttpGet("{id}")]
+
+    public async Task<IActionResult> GetNotificationById(Guid id)
+    {
+        var notifications = await _notificationService.GetNotificationByIdAsync(id);
+        if (notifications == null)
+            return NotFound();
+        
+        return Ok(notifications);
+    }
     
     [HttpPost]
     public async Task <IActionResult> CreateNotification([FromBody] Notification notification)

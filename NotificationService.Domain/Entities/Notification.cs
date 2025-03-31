@@ -1,7 +1,10 @@
-﻿namespace NotificationService.Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace NotificationService.Domain.Entities;
 
 public class Notification
 {
+    [Key]
     public Guid Id { get; set; }
     public string Title { get; set; }
     public string Message { get; set; }

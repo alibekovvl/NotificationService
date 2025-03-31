@@ -29,9 +29,9 @@ public class NotificationRepository : INotificationRepository
             .ToListAsync();
     }
 
-    public async Task MarkAsReadAsync(Guid notificationId)
+    public async Task MarkAsReadAsync(Guid id)
     {
-        var notification = await _context.Notifications.FindAsync(notificationId);
+        var notification = await _context.Notifications.FindAsync(id);
         if (notification != null)
         {
             notification.IsRead = true;
@@ -44,6 +44,10 @@ public class NotificationRepository : INotificationRepository
             .Filter(filter)
             .Page(param)
             .ToListAsync();
+    }
+    public async Task<Notification?> GetByIdAsync(Guid id)
+    {
+       return await _context.Notifications.FindAsync(id);
     }
     
    
