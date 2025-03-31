@@ -1,4 +1,5 @@
-﻿using NotificationService.Domain.Entities;
+﻿using NotificationService.Application.Filters;
+using NotificationService.Domain.Entities;
 using NotificationService.Domain.Interfaces;
 
 namespace NotificationService.Application.Services;
@@ -16,4 +17,10 @@ public class NotificationAppService : INotificationService
         await _notificationRepository.AddAsync(notification);
     }
 
+    public async Task<List<Notification>> GetNotificationsAsync(NotificationFilter filter,PageParams param)
+    {
+        return await _notificationRepository.GetAllAsync(filter,param);
+    }
+
+    
 }

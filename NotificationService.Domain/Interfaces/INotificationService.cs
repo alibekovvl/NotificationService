@@ -1,8 +1,10 @@
-﻿using NotificationService.Domain.Entities;
+﻿using NotificationService.Application.Filters;
+using NotificationService.Domain.Entities;
 
 namespace NotificationService.Domain.Interfaces;
 
 public interface INotificationService
 {
     Task SendNotificationAsync (Notification notification);
+    Task <List<Notification>> GetNotificationsAsync(NotificationFilter filter,PageParams param);
 }

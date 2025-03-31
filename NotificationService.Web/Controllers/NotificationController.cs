@@ -1,5 +1,5 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using NotificationService.Application.Filters;
 using NotificationService.Domain.Entities;
 using NotificationService.Domain.Interfaces;
 
@@ -14,6 +14,14 @@ public class NotificationController : ControllerBase
     {
         _notificationService = notificationService;
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetNotifications([FromQuery] NotificationFilter filter, [FromQuery] PageParams param)
+    {
+        var notifications = await _notificationService.GetNotificationsAsync(filter,param);
+        return Ok(notifications);
+    }
+    
     [HttpPost]
     public async Task <IActionResult> CreateNotification([FromBody] Notification notification)
     {

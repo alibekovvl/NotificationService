@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NotificationService.Application.Filters;
 using NotificationService.Domain.Entities;
 using NotificationService.Domain.Interfaces;
 using NotificationService.Infrastructure.Data;
+using NotificationService.Infrastructure.Filtration;
 
 namespace NotificationService.Infrastructure.Repositories;
 
@@ -36,6 +38,13 @@ public class NotificationRepository : INotificationRepository
             await _context.SaveChangesAsync();
         }
     }
-
+    public async Task<List<Notification>> GetAllAsync(NotificationFilter filter, PageParams param )
+    {
+        return await _context.Notifications
+            .Filter(filter)
+            .Page(param)
+            .ToListAsync();
+    }
+    
    
 }

@@ -1,4 +1,5 @@
-﻿using NotificationService.Domain.Entities;
+﻿using NotificationService.Application.Filters;
+using NotificationService.Domain.Entities;
 
 namespace NotificationService.Domain.Interfaces;
 
@@ -7,4 +8,5 @@ public interface INotificationRepository
     Task AddAsync (Notification notification);
     Task <List<Notification>> GetUnreadNotificationsAsync(string userId);
     Task MarkAsReadAsync(Guid notificationId);
+    Task<List<Notification>> GetAllAsync(NotificationFilter filter, PageParams param);
 }
