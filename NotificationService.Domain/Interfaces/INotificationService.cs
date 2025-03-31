@@ -8,4 +8,5 @@ public interface INotificationService
     Task SendNotificationAsync (Notification notification);
     Task <List<Notification>> GetNotificationsAsync(NotificationFilter filter,PageParams param);
     Task<Notification> GetNotificationByIdAsync (Guid id);
+    Task MarkAsReadAsync(Guid id);
 }

@@ -25,16 +25,16 @@ public class NotificationRepository : INotificationRepository
     public  Task <List<Notification>> GetUnreadNotificationsAsync(string userId)
     {
         return _context.Notifications
-            .Where(s => !s.IsRead && s.RecipientEmail == userId)
+            .Where(s => s.ReadAt == null && s.RecipientEmail == userId)
             .ToListAsync();
     }
 
     public async Task MarkAsReadAsync(Guid id)
     {
         var notification = await _context.Notifications.FindAsync(id);
-        if (notification != null)
+        if (notification != null && notification.ReadAt == null)
         {
-            notification.IsRead = true;
+            notification.ReadAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
     }

@@ -23,7 +23,6 @@ public class NotificationController : ControllerBase
     }
 
     [HttpGet("{id}")]
-
     public async Task<IActionResult> GetNotificationById(Guid id)
     {
         var notifications = await _notificationService.GetNotificationByIdAsync(id);
@@ -38,5 +37,14 @@ public class NotificationController : ControllerBase
     {
         await _notificationService.SendNotificationAsync(notification);
         return Ok("Notification sent");
+    }
+
+    [HttpPost("MarkAsRead/{id}")]
+
+    public async Task<IActionResult> MarkAsReadById(Guid id)
+    {
+        await _notificationService.MarkAsReadAsync(id);
+        return Ok(new{message = "Notification is read"});
+        
     }
 }
