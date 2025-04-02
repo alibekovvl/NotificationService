@@ -13,8 +13,7 @@ public class MockAIAnalysisService : IAIAnalysisService
 
         string category;
         double confidence;
-
-        // Определяем категорию на основе ключевых слов
+        
         if (text.Contains("error", StringComparison.OrdinalIgnoreCase) ||
             text.Contains("exception", StringComparison.OrdinalIgnoreCase) ||
             text.Contains("failed", StringComparison.OrdinalIgnoreCase))
