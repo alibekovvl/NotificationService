@@ -49,6 +49,11 @@ public class NotificationRepository : INotificationRepository
     {
        return await _context.Notifications.FindAsync(id);
     }
-    
+
+    public async Task UpdateAsync(Notification notification)
+    {
+        _context.Update(notification);
+        await _context.SaveChangesAsync();
+    }
    
 }

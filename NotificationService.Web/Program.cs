@@ -11,7 +11,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services
     .AddScoped<INotificationRepository, NotificationRepository>()
-    .AddScoped<INotificationService, NotificationAppService>();
+    .AddScoped<INotificationService, NotificationAppService>()
+    .AddScoped<IAIAnalysisService, MockAIAnalysisService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

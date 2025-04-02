@@ -10,4 +10,5 @@ public interface INotificationRepository
     Task MarkAsReadAsync(Guid id);
     Task<List<Notification>> GetAllAsync(NotificationFilter filter, PageParams param);
     Task <Notification>? GetByIdAsync (Guid id);
+    Task UpdateAsync (Notification notification);
 }

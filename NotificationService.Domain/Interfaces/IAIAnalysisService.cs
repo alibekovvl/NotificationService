@@ -4,5 +4,5 @@ namespace NotificationService.Domain.Interfaces;
 
 public interface IAIAnalysisService
 {
-    Task<AIAlanysisResult> AnalyzeTextResult(string text);
+    Task<Notification> AnalyzeTextResult(string text);
 }

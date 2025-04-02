@@ -7,14 +7,25 @@ namespace NotificationService.Application.Services;
 public class NotificationAppService : INotificationService
 {
     private readonly INotificationRepository _notificationRepository;
+    private readonly IAIAnalysisService _aiAnalysisService;
 
-    public NotificationAppService(INotificationRepository notificationRepository)
+    public NotificationAppService(INotificationRepository notificationRepository, IAIAnalysisService aiAnalysisService)
     {
         _notificationRepository = notificationRepository;
+        _aiAnalysisService = aiAnalysisService;
     }
     public async Task SendNotificationAsync(Notification notification)
     {
+        notification.ProcessingStatus = "processing";
         await _notificationRepository.AddAsync(notification);
+        
+        var analysisResult = await _aiAnalysisService.AnalyzeTextResult(notification.Message);
+        
+        notification.Category = analysisResult.Category;
+        notification.Confidence = analysisResult.Confidence;
+        notification.ProcessingStatus = "completed";
+        
+        await _notificationRepository.UpdateAsync(notification);
     }
 
     public async Task<List<Notification>> GetNotificationsAsync(NotificationFilter filter,PageParams param)
