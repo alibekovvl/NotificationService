@@ -1,6 +1,0 @@
-﻿<Project>
-    <PropertyGroup>
-        <StartupProject>NotificationService.Web</StartupProject>
-        <MigrationsProject>NotificationService.Infrastructure</MigrationsProject>
-    </PropertyGroup>
-</Project>
