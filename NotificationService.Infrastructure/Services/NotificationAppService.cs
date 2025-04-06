@@ -21,12 +21,14 @@ public class NotificationAppService : INotificationService
         notification.ProcessingStatus = "processing";
         await _notificationRepository.AddAsync(notification);
         
-        _backgroundJobClient.Enqueue(() => ProcessNotificationAsync(notification));
-        return;
+        string jobId = _backgroundJobClient.Enqueue(() => ProcessNotificationAsync(notification.Id));
+        
+        Console.WriteLine($"[Hangfire] Создана задача с JobId: {jobId}");
     }
 
-    public async Task ProcessNotificationAsync(Notification notification)
+    public async Task ProcessNotificationAsync(Guid notificationId)
     {
+        var notification = await _notificationRepository.GetByIdAsync(notificationId);
         var analysisResult = await _aiAnalysisService.AnalyzeTextResult(notification.Message);
         notification.Category = analysisResult.Category;
         notification.Confidence = analysisResult.Confidence;

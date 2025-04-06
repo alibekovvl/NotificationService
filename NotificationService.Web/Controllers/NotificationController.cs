@@ -29,6 +29,24 @@ public class NotificationController : ControllerBase
         
         return Ok(notifications);
     }
+
+    [HttpGet("status/{jobId}")]
+    public async Task<IActionResult> GetJobStatus(string jobId)
+    {
+        var jobDetails = Hangfire.JobStorage.Current.GetConnection().GetJobData(jobId);
+
+        if (jobDetails == null)
+        {
+            return NotFound(new { message = "Job not found" });
+        }
+
+        return Ok(new
+        {
+            jobId,
+            status = jobDetails.State
+        });
+
+    }
     [HttpPost]
     public async Task <IActionResult> CreateNotification([FromBody] Notification notification, [FromServices] IAIAnalysisService aiAnalysisService)
     {   
