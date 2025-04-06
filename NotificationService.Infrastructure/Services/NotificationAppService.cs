@@ -1,4 +1,5 @@
-﻿using NotificationService.Application.Filters;
+﻿using Hangfire;
+using NotificationService.Application.Filters;
 using NotificationService.Domain.Entities;
 using NotificationService.Domain.Interfaces;
 
@@ -8,26 +9,30 @@ public class NotificationAppService : INotificationService
 {
     private readonly INotificationRepository _notificationRepository;
     private readonly IAIAnalysisService _aiAnalysisService;
-
-    public NotificationAppService(INotificationRepository notificationRepository, IAIAnalysisService aiAnalysisService)
+    private readonly IBackgroundJobClient _backgroundJobClient;
+    public NotificationAppService(INotificationRepository notificationRepository, IAIAnalysisService aiAnalysisService, IBackgroundJobClient backgroundJobClient)
     {
         _notificationRepository = notificationRepository;
         _aiAnalysisService = aiAnalysisService;
+        _backgroundJobClient = backgroundJobClient;
     }
     public async Task SendNotificationAsync(Notification notification)
     {
         notification.ProcessingStatus = "processing";
         await _notificationRepository.AddAsync(notification);
         
+        _backgroundJobClient.Enqueue(() => ProcessNotificationAsync(notification));
+        return;
+    }
+
+    public async Task ProcessNotificationAsync(Notification notification)
+    {
         var analysisResult = await _aiAnalysisService.AnalyzeTextResult(notification.Message);
-        
         notification.Category = analysisResult.Category;
         notification.Confidence = analysisResult.Confidence;
         notification.ProcessingStatus = "completed";
-        
         await _notificationRepository.UpdateAsync(notification);
     }
-
     public async Task<List<Notification>> GetNotificationsAsync(NotificationFilter filter,PageParams param)
     {
         return await _notificationRepository.GetAllAsync(filter,param);
