@@ -1,3 +1,4 @@
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using NotificationService.Application.Services;
 using NotificationService.Domain.Interfaces;
@@ -8,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+// builder.Services.AddHangfire();
 builder.Services
     .AddScoped<INotificationRepository, NotificationRepository>()
     .AddScoped<INotificationService, NotificationAppService>()

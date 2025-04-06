@@ -14,14 +14,12 @@ public class NotificationController : ControllerBase
     {
         _notificationService = notificationService;
     }
-
     [HttpGet]
     public async Task<IActionResult> GetNotifications([FromQuery] NotificationFilter filter, [FromQuery] PageParams param)
     {
         var notifications = await _notificationService.GetNotificationsAsync(filter,param);
         return Ok(notifications);
     }
-
     [HttpGet("{id}")]
     public async Task<IActionResult> GetNotificationById(Guid id)
     {
@@ -31,20 +29,21 @@ public class NotificationController : ControllerBase
         
         return Ok(notifications);
     }
-    
     [HttpPost]
-    public async Task <IActionResult> CreateNotification([FromBody] Notification notification)
-    {
+    public async Task <IActionResult> CreateNotification([FromBody] Notification notification, [FromServices] IAIAnalysisService aiAnalysisService)
+    {   
+        if (notification == null || string.IsNullOrWhiteSpace(notification.Message))
+        {
+            return BadRequest("Notification or message cannot be null.");
+        }
+        var analysisResult = await aiAnalysisService.AnalyzeTextResult(notification.Message);
         await _notificationService.SendNotificationAsync(notification);
-        return Ok("Notification sent");
+        return Ok(new{message = "Notification sent", category = notification.Category});
     }
-
     [HttpPost("MarkAsRead/{id}")]
-
     public async Task<IActionResult> MarkAsReadById(Guid id)
     {
         await _notificationService.MarkAsReadAsync(id);
         return Ok(new{message = "Notification is read"});
-        
     }
 }

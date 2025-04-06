@@ -18,7 +18,6 @@ public static class NotificationExtentions
     {
         if (!string.IsNullOrEmpty(filter.Title))
             query = query.Where(n => n.Title.Contains(filter.Title));
-        
         if (!string.IsNullOrEmpty(filter.Message))
             query = query.Where(n => n.Message.Contains(filter.Message));
         if (!string.IsNullOrEmpty(filter.RecipientEmail))
