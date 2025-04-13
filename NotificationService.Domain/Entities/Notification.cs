@@ -10,8 +10,7 @@ public class Notification
     public string Message { get; set; }
     public string RecipientEmail { get; set; }
     public DateTime? ReadAt { get; set; }
-    public DateTime CreatedAt { get; set; }
-    
+    public DateTime? CreatedAt { get; set; }
     public string Category { get; set; } = "info";
     public double Confidence { get; set; }
     public string ProcessingStatus { get; set; } = "pending";

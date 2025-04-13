@@ -5,7 +5,7 @@ namespace NotificationService.Application.Services;
 public class MockAIAnalysisService : IAIAnalysisService
 {
     private static readonly Random _random = new();
-    public async Task<Notification> AnalyzeTextResult(string text)
+    public async Task<AiResultEntity> AnalyzeTextResult(string text)
     {
         await Task.Delay(_random.Next(1000, 3000));
 
@@ -31,7 +31,7 @@ public class MockAIAnalysisService : IAIAnalysisService
             category = "info";
             confidence = _random.NextDouble() * (0.99 - 0.8) + 0.8;
         }
-        return new Notification()
+        return new AiResultEntity()
         {
             Category = category,
             Confidence = confidence,

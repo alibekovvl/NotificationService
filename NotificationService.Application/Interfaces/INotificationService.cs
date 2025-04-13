@@ -5,9 +5,9 @@ namespace NotificationService.Domain.Interfaces;
 
 public interface INotificationService
 {
-    Task SendNotificationAsync (Notification notification);
+    Task SendNotificationAsync (NotificationDTOs notificationDto);
     Task <List<Notification>> GetNotificationsAsync(NotificationFilter filter,PageParams param);
-    Task<Notification> GetNotificationByIdAsync (Guid id);
+    Task<Notification?> GetNotificationByIdAsync (Guid id);
     Task MarkAsReadAsync(Guid id);
     Task ProcessNotificationAsync(Guid id);
 }

@@ -3,7 +3,8 @@ using NotificationService.Application.Filters;
 using NotificationService.Domain.Entities;
 using NotificationService.Domain.Interfaces;
 using NotificationService.Infrastructure.Data;
-using NotificationService.Infrastructure.Filtration;
+using NotificationService.Infrastructure.Extentions;
+
 
 namespace NotificationService.Infrastructure.Repositories;
 

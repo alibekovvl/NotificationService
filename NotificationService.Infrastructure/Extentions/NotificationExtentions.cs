@@ -2,7 +2,7 @@
 using NotificationService.Application.Filters;
 using NotificationService.Domain.Entities;
 
-namespace NotificationService.Infrastructure.Filtration;
+namespace NotificationService.Infrastructure.Extentions;
 
 public static class NotificationExtentions
 {
