@@ -1,4 +1,4 @@
-﻿namespace NotificationService.Application.Filters;
+﻿namespace NotificationService.Domain.FiltersSortPaginations;
 
 public class NotificationFilter
 {

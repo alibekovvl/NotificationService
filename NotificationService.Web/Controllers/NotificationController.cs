@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using NotificationService.Application.Filters;
-using NotificationService.Application.Services;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using NotificationService.Application.Interfaces;
 using NotificationService.Domain.Entities;
-using NotificationService.Domain.Interfaces;
+using NotificationService.Domain.FiltersSortPaginations;
 using NotificationService.Infrastructure.Extentions;
+using NotificationService.Infrastructure.Services.Caching;
 
 namespace NotificationService.Controllers;
 
@@ -13,18 +14,17 @@ public class NotificationController : ControllerBase
 {
     private readonly INotificationService _notificationService;
     private readonly IRedisCacheService _redisCacheService;
-    public NotificationController(INotificationService notificationService, IRedisCacheService redisCacheService)
+    private readonly IMapper _mapper;
+    public NotificationController(INotificationService notificationService, IRedisCacheService redisCacheService, IMapper mapper)
     {
         _notificationService = notificationService;
         _redisCacheService = redisCacheService;
+        _mapper = mapper;
     }
     [HttpGet]
     public async Task<IActionResult> GetNotifications([FromQuery] NotificationFilter filter, [FromQuery] PageParams param)
     {
-        string cacheKey = CacheKeyGenerator.Generator(filter, param);
-        var notifications = await _redisCacheService.GetOrSetDataAsync(
-            cacheKey,
-            () => _notificationService.GetNotificationsAsync(filter, param));
+        var notifications = await _notificationService.GetNotificationsAsync(filter, param);
         return Ok(notifications);
     }
     [HttpGet("{id}")]
@@ -52,25 +52,13 @@ public class NotificationController : ControllerBase
         });
     }
     [HttpPost]
-    public async Task <IActionResult> CreateNotification([FromBody] NotificationDTOs notificationDto, [FromServices] IAIAnalysisService aiAnalysisService)
+    public async Task <IActionResult> CreateNotification([FromBody] NotificationDTOs notificationDto, [FromServices] IAiAnalysisService aiAnalysisService)
     {   
-        if (notificationDto == null || string.IsNullOrWhiteSpace(notificationDto.Message))
-            return BadRequest("Notification or message cannot be null.");
-        var notification = new Notification
-        {
-            Id = Guid.NewGuid(), 
-            Title = notificationDto.Title,
-            Message = notificationDto.Message,
-            RecipientEmail = notificationDto.RecipientEmail,
-            CreatedAt = DateTime.UtcNow,  
-            ProcessingStatus = "processing"
-        };
-        var analysisResult = await aiAnalysisService.AnalyzeTextResult(notification.Message);
-        
+        var notification = _mapper.Map<Notification>(notificationDto);
         await _notificationService.SendNotificationAsync(notificationDto);
         return Ok(new{message = "Notification sent", category = notification.Category});
     }
-    [HttpPost("MarkAsRead/{id}")]
+    [HttpPatch("MarkAsRead/{id}")]
     public async Task<IActionResult> MarkAsReadById(Guid id)
     {
         await _notificationService.MarkAsReadAsync(id);

@@ -1,15 +1,17 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
+using StackExchange.Redis;
 
-namespace NotificationService.Application.Services;
+namespace NotificationService.Infrastructure.Services.Caching;
 public class RedisCacheService : IRedisCacheService
 {
     private readonly IDistributedCache _cache;
-    private readonly TimeSpan _defaultExpiration = TimeSpan.FromMinutes(1);
-
-    public RedisCacheService(IDistributedCache cache)
+    private readonly TimeSpan _defaultExpiration = TimeSpan.FromSeconds(2);
+    private readonly IConnectionMultiplexer _redis;
+    public RedisCacheService(IDistributedCache cache, IConnectionMultiplexer redis)
     {
         _cache = cache;
+        _redis = redis;
     }
     public async Task <T?> GetDataAsync <T>(string key)
     {
@@ -27,7 +29,8 @@ public class RedisCacheService : IRedisCacheService
     {
         var options = new DistributedCacheEntryOptions()
         {
-            AbsoluteExpirationRelativeToNow = _defaultExpiration
+            AbsoluteExpirationRelativeToNow = _defaultExpiration,
+            SlidingExpiration = null
         };
         var serializedData = JsonSerializer.Serialize(value);
         Console.WriteLine($"[REDIS]SetDataAsync: {key}, Data = {serializedData}");
@@ -43,6 +46,23 @@ public class RedisCacheService : IRedisCacheService
         var data = await fetchData();
         await SetDataAsync<T>(key, data);
         return data;
+    }
+
+    public async Task RemoveAsync(string key)
+    {
+        await _cache.RemoveAsync(key);
+    }
+
+    public async Task RemoveByPrefixAsync(string prefix)
+    {
+        var server = _redis.GetServer(_redis.GetEndPoints().First());
+        var keys = server.Keys(pattern: $"{prefix}").ToArray();
+
+        foreach (var key in keys)
+        {
+            Console.WriteLine($"[REDIS] Removing key: {key}");
+            await _cache.RemoveAsync(key);
+        }
     }
 }
 

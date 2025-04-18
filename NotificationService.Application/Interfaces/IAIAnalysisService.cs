@@ -1,8 +1,8 @@
 ﻿using NotificationService.Domain.Entities;
 
-namespace NotificationService.Domain.Interfaces;
+namespace NotificationService.Application.Interfaces;
 
-public interface IAIAnalysisService
+public interface IAiAnalysisService
 {
     Task<AiResultEntity> AnalyzeTextResult(string text);
 }

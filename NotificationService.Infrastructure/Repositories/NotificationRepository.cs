@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NotificationService.Application.Filters;
+using NotificationService.Application.Interfaces;
 using NotificationService.Domain.Entities;
-using NotificationService.Domain.Interfaces;
+using NotificationService.Domain.FiltersSortPaginations;
 using NotificationService.Infrastructure.Data;
 using NotificationService.Infrastructure.Extentions;
 

@@ -1,8 +1,8 @@
-﻿using NotificationService.Domain.Entities;
-using NotificationService.Domain.Interfaces;
+﻿using NotificationService.Application.Interfaces;
+using NotificationService.Domain.Entities;
 
-namespace NotificationService.Application.Services;
-public class MockAIAnalysisService : IAIAnalysisService
+namespace NotificationService.Infrastructure.Services;
+public class MockAiAnalysisService : IAiAnalysisService
 {
     private static readonly Random _random = new();
     public async Task<AiResultEntity> AnalyzeTextResult(string text)

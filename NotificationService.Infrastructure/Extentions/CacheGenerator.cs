@@ -1,8 +1,8 @@
-﻿using NotificationService.Application.Filters;
+﻿using NotificationService.Domain.FiltersSortPaginations;
 
 namespace NotificationService.Infrastructure.Extentions;
 
-public  class CacheKeyGenerator
+public  class CacheGenerator
 {
     public static string Generator(NotificationFilter filter, PageParams param)
     {

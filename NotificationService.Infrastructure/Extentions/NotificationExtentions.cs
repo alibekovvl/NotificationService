@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using NotificationService.Application.Filters;
 using NotificationService.Domain.Entities;
+using NotificationService.Domain.FiltersSortPaginations;
 
 namespace NotificationService.Infrastructure.Extentions;
 

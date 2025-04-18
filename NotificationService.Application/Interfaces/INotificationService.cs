@@ -1,7 +1,7 @@
-﻿using NotificationService.Application.Filters;
-using NotificationService.Domain.Entities;
+﻿using NotificationService.Domain.Entities;
+using NotificationService.Domain.FiltersSortPaginations;
 
-namespace NotificationService.Domain.Interfaces;
+namespace NotificationService.Application.Interfaces;
 
 public interface INotificationService
 {
