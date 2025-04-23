@@ -2,6 +2,7 @@ using Hangfire;
 using Hangfire.MemoryStorage;
 using StackExchange.Redis;
 using Microsoft.EntityFrameworkCore;
+using MockService.Services;
 using NotificationService.Application.Interfaces;
 using NotificationService.Application.Mapping;
 using NotificationService.Infrastructure.Data;

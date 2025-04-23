@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Hangfire;
 using Microsoft.Extensions.Caching.Memory;
+using MockService.Services;
 using NotificationService.Application.Interfaces;
 using NotificationService.Domain.Entities;
 using NotificationService.Domain.FiltersSortPaginations;

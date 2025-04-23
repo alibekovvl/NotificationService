@@ -1,4 +1,4 @@
-﻿namespace NotificationService.Domain.Entities;
+﻿namespace MockService.Entities;
 
 public class AiResultEntity
 {

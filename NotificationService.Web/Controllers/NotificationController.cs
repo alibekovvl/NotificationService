@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using MockService.Services;
 using NotificationService.Application.Interfaces;
 using NotificationService.Domain.Entities;
 using NotificationService.Domain.FiltersSortPaginations;
@@ -56,7 +57,7 @@ public class NotificationController : ControllerBase
     {   
         var notification = _mapper.Map<Notification>(notificationDto);
         await _notificationService.SendNotificationAsync(notificationDto);
-        return Ok(new{message = "Notification sent", category = notification.Category});
+        return Created();
     }
     [HttpPatch("MarkAsRead/{id}")]
     public async Task<IActionResult> MarkAsReadById(Guid id)

@@ -1,7 +1,6 @@
-﻿using NotificationService.Application.Interfaces;
-using NotificationService.Domain.Entities;
+﻿using MockService.Entities;
 
-namespace NotificationService.Infrastructure.Services;
+namespace MockService.Services;
 public class MockAiAnalysisService : IAiAnalysisService
 {
     private static readonly Random _random = new();
