@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>SignalR Тест</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+</head>
+<body>
+<h2>SignalR WebSocket Тест</h2>
+<p id="status">Статус: Подключение...</p>
+<ul id="log"></ul>
+
+<script>
+    const statusElem = document.getElementById("status");
+    const logList = document.getElementById("log");
+
+   
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:5243/notificationHub", {
+            skipNegotiation: true,
+            transport: signalR.HttpTransportType.WebSockets
+        })
+        .configureLogging(signalR.LogLevel.Debug)
+        .build();
+
+    connection.on("ReceiveNotification", (notification) => {
+        const li = document.createElement("li");
+        li.textContent = `Получено уведомление: ${JSON.stringify(notification)}`;
+        logList.appendChild(li);
+    });
+
+    connection.on("ConnectionEstablished", (connected) => {
+        const li = document.createElement("li");
+        li.textContent = connected ? "Соединение с хабом установлено" : "Соединение потеряно";
+        logList.appendChild(li);
+    });
+
+    connection.start()
+        .then(() => {
+            statusElem.textContent = "Статус: Подключено к хабу";
+            console.log("Подключено к SignalR хабу");
+        })
+        .catch(err => {
+            statusElem.textContent = "Статус: Ошибка подключения";
+            console.error("Ошибка подключения:", err.toString());
+        });
+</script>
+</body>
+</html>

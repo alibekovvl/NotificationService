@@ -18,18 +18,20 @@ public class NotificationAppService : INotificationService
     private readonly IBackgroundJobClient _backgroundJobClient;
     private readonly IRedisCacheService _redisCacheService;
     private readonly IMapper _mapper;
+    private readonly INotificationBroadcaster _notificationBroadcaster;
     public NotificationAppService(
         INotificationRepository notificationRepository, 
         IAiAnalysisService aiAnalysisService, 
         IBackgroundJobClient backgroundJobClient,
         IRedisCacheService redisCacheService,
-        IMapper mapper)
+        IMapper mapper, INotificationBroadcaster notificationBroadcaster)
     {
         _notificationRepository = notificationRepository;
         _aiAnalysisService = aiAnalysisService;
         _backgroundJobClient = backgroundJobClient;
         _redisCacheService = redisCacheService;
         _mapper = mapper;
+        _notificationBroadcaster = notificationBroadcaster;
     }
     public async Task SendNotificationAsync(NotificationDTOs notificationDto)
     {
@@ -56,6 +58,7 @@ public class NotificationAppService : INotificationService
         await _notificationRepository.UpdateAsync(notification);
         
         await _redisCacheService.SetDataAsync($"notification_{notification.Id}", notification);
+        await _notificationBroadcaster.BroadcastNotificationAsync(notification);
     }
     public async Task<List<Notification>> GetNotificationsAsync(NotificationFilter filter,PageParams param)
     {
