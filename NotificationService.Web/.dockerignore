@@ -1,0 +1,40 @@
+﻿# Общие папки и файлы .NET
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/.idea/
+
+# Лог-файлы и временные файлы
+*.log
+*.tmp
+
+# Секреты и конфигурации (если ты используешь локально)
+*.user
+*.suo
+secrets.json
+
+# Git
+.git/
+.gitignore
+
+# Docker-related
+Dockerfile*
+docker-compose*
+
+# ОС и IDE системные файлы
+*.DS_Store
+Thumbs.db
+
+# Node.js или фронт, если ты его когда-то добавишь
+node_modules/
+dist/
+build/
+
+
+*.db
+*.sqlite
+
+# appsettings — если хочешь использовать только переменные окружения:
+appsettings.Development.json
+appsettings.Local.json

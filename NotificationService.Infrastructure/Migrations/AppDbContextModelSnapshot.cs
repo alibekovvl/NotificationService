@@ -35,7 +35,7 @@ namespace NotificationService.Infrastructure.Migrations
                     b.Property<double>("Confidence")
                         .HasColumnType("double precision");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Message")

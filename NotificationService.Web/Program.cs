@@ -12,30 +12,32 @@ using NotificationService.Infrastructure.Services;
 using NotificationService.Infrastructure.Services.Caching;
 
 var builder = WebApplication.CreateBuilder(args);
-var redisConnectionString = builder.Configuration.GetConnectionString("RedisConnection");
-
-
+var redisConnectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION");
+var defaultConnectionString = Environment.GetEnvironmentVariable("DEFAULT_CONNECTION");
+builder.WebHost.UseUrls("http://*:8080");
 builder.Services.AddSignalR();
+
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = redisConnectionString;
     options.InstanceName = "";
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowSpecificOrigin", policy =>
-    {
-        policy.WithOrigins("http://localhost:3000") // Укажи адрес фронтенда
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials();  // Разрешаем использование cookies и credentials
-    });
-});
+// builder.Services.AddCors(options =>
+// {
+//     options.AddPolicy("AllowSpecificOrigin", policy =>
+//     {
+//         policy.WithOrigins("http://localhost:3000") 
+//             .AllowAnyMethod()
+//             .AllowAnyHeader()
+//             .AllowCredentials();  
+//     });
+// });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-    builder.Services.AddHangfire(x => x.UseMemoryStorage());
+    options.UseNpgsql(defaultConnectionString));
+
+builder.Services.AddHangfire(x => x.UseMemoryStorage());
 builder.Services.AddHangfireServer();
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp => ConnectionMultiplexer.Connect(redisConnectionString));
@@ -61,7 +63,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowSpecificOrigin");
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+} //авто-миграции
+
+//app.UseCors("AllowSpecificOrigin");
 app.MapHub<NotificationHub>("/notificationHub");
 app.UseHangfireDashboard("/hangfire");
 app.UseAuthorization();
